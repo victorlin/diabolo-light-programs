@@ -93,6 +93,8 @@ void setup() {
 void loop() {
     Diabolo_Light::handle_button();
 
+    if (Diabolo_Light::get_current_mode() != 1) return;
+
     Scene scene = scenes[scene_num];
 
     // Progress within current scene, from 0-1
