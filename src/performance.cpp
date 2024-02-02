@@ -68,7 +68,7 @@ Scene(BLUE_3, YELLOW_3, 2733), //  // transition
 Scene(YELLOW_3, RED_3, 1483), //  // transition
 Scene(RED_3, RED_3, 17850), //  // dragon
 Scene(RED_3, WHITE_3, 2916), //  // transition
-Scene(WHITE_3, WHITE_3, 251016), // 
+// Scene(WHITE_3, WHITE_3, 251016), // 
 };
 
 uint8_t scene_num = 0;
@@ -108,12 +108,17 @@ void loop() {
         scene_num++;
 
         // Turn off after last scene
-        if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-            Diabolo_Light::set_current_mode(0);
-        }
+        // if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
+        //     Diabolo_Light::set_current_mode(0);
+        // }
     }
 
-    if (scene.start == scene.end) {
+    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
+        // HACK
+        set_all_pixels(pixels.Color(255, 255, 255));
+        return;
+    }
+    else if (scene.start == scene.end) {
         set_all_pixels(pixels.Color(
             scene.start.r,
             scene.start.g,
