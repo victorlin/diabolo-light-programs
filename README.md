@@ -12,6 +12,10 @@ PlatformIO is configured to upload a `src/main.cpp` file. Choose which program t
 
 This program is used to pick colors that look good on the LED kit.
 
+## `src/single_color.cpp`
+
+This program shows a color on initial button press, and will turn off on the 2nd press.
+
 ## `src/performance.cpp`
 
 This program defines a performance consisting of scenes which are defined by colors and transitions between colors. Contains generic structs which I hope to pull out into a separate file eventually.
