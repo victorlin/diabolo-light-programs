@@ -20,18 +20,18 @@ def generate_scenes(fcp_xml):
     with open(fcp_xml) as f:
         root = ET.fromstring(f.read())
 
-        marker_pattern = re.compile(r'LED_MARKER ([A-Z]+_\d), ([A-Z]+_\d)( \/\/ .*)?')
+    marker_pattern = re.compile(r'LED_MARKER ([A-Z]+_\d), ([A-Z]+_\d)( \/\/ .*)?')
 
-        for video in root.iter('video'):
-            if video.attrib['name'].startswith('LED_MARKER'):
-                match = marker_pattern.search(video.attrib['name'])
-                if match:
-                    color1 = match.group(1)
-                    color2 = match.group(2)
-                    comment = match.group(3) or ''
-                    print(f"Scene({color1}, {color2}, {duration_to_ms(video.attrib['duration'])}), // {comment}")
-                else:
-                    print(f"Scene(, , {duration_to_ms(video.attrib['duration'])}),")
+    for video in root.iter('video'):
+        if video.attrib['name'].startswith('LED_MARKER'):
+            match = marker_pattern.search(video.attrib['name'])
+            if match:
+                color1 = match.group(1)
+                color2 = match.group(2)
+                comment = match.group(3) or ''
+                print(f"Scene({color1}, {color2}, {duration_to_ms(video.attrib['duration'])}), // {comment}")
+            else:
+                print(f"Scene(, , {duration_to_ms(video.attrib['duration'])}),")
 
 
 def duration_to_ms(duration_str):
