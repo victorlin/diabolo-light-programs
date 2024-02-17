@@ -111,7 +111,7 @@ void loop() {
         scene_num++;
 
         // Turn off after last scene
-        if (scene_num >= TOTAL_SCENES) {
+        if (scene_num > TOTAL_SCENES) {
             Diabolo_Light::set_current_mode(0);
         }
     }
