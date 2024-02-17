@@ -48,13 +48,13 @@ Scene get_current_scene(uint8_t scene_num) {
         case 1: return Scene(WHITE_1, WHITE_1, 6683); 
         case 2: return Scene(WHITE_1, YELLOW_3, 1166); 
         case 3: return Scene(YELLOW_3, YELLOW_3, 20966); 
-        case 4: return Scene(YELLOW_3, BLUE_2, 816);  // toss up
-        case 5: return Scene(BLUE_2, YELLOW_3, 816);  // toss down
-        case 6: return Scene(YELLOW_3, YELLOW_3, 1016);  // before umbrella
-        case 7: return Scene(YELLOW_3, BLUE_2, 816);  // toss up
-        case 8: return Scene(BLUE_2, YELLOW_3, 816);  // toss down
-        case 9: return Scene(YELLOW_3, YELLOW_3, 933); 
-        case 10: return Scene(YELLOW_3, WHITE_3, 1283);  // before umbrella
+        case 4: return Scene(YELLOW_3, YELLOW_3, 1233);  // before umbrella
+        case 5: return Scene(YELLOW_3, BLUE_2, 816);  // toss up
+        case 6: return Scene(BLUE_2, YELLOW_3, 816);  // toss down
+        case 7: return Scene(YELLOW_3, YELLOW_3, 1066);  // before umbrella
+        case 8: return Scene(YELLOW_3, BLUE_2, 816);  // toss up
+        case 9: return Scene(BLUE_2, YELLOW_3, 816);  // toss down
+        case 10: return Scene(YELLOW_3, WHITE_3, 933);  // before umbrella
         case 11: return Scene(WHITE_3, WHITE_3, 1250);  // before umbrella
         case 12: return Scene(WHITE_3, BLUE_2, 816);  // toss up
         case 13: return Scene(BLUE_2, WHITE_3, 816);  // toss down
