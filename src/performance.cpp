@@ -44,32 +44,32 @@ struct Scene {
 
 Scene get_current_scene(uint8_t scene_num) {
     switch (scene_num) {
-        case 1: return Scene(WHITE_1, WHITE_1, 6683);
-        case 2: return Scene(WHITE_1, YELLOW_3, 1166);
-        case 3: return Scene(YELLOW_3, YELLOW_3, 36633);
-        case 4: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 5: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 6: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 7: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 8: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 9: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 10: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 11: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 12: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 13: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 14: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 15: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 16: return Scene(RED_3, RED_3, 333);         //  // umbrella
-        case 17: return Scene(YELLOW_3, YELLOW_3, 316);   //  // umbrella
-        case 18: return Scene(RED_3, ORANGE_3, 650);      //  // umbrella
-        case 19: return Scene(ORANGE_3, ORANGE_3, 21200); //  // after umbrella
-        case 20: return Scene(ORANGE_3, BLUE_3, 2733);    //  // transition
-        case 21: return Scene(BLUE_3, BLUE_3, 17950);     //  // around the world
-        case 22: return Scene(BLUE_3, YELLOW_3, 2733);    //  // transition
-        case 23: return Scene(YELLOW_3, RED_3, 1483);     //  // transition
-        case 24: return Scene(RED_3, RED_3, 17850);       //  // dragon
-        case 25: return Scene(RED_3, WHITE_3, 2916);      //  // transition
-        case 26: return Scene(WHITE_3, WHITE_3, 251016); //
+        case 1: return Scene(WHITE_1, WHITE_1, 6683); 
+        case 2: return Scene(WHITE_1, YELLOW_3, 1166); 
+        case 3: return Scene(YELLOW_3, YELLOW_3, 36633);  // before umbrella
+        case 4: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 5: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 6: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 7: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 8: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 9: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 10: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 11: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 12: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 13: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 14: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 15: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 16: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 17: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 18: return Scene(RED_3, ORANGE_3, 650);  // umbrella
+        case 19: return Scene(ORANGE_3, ORANGE_3, 21200);  // after umbrella
+        case 20: return Scene(ORANGE_3, BLUE_3, 2733);  // transition
+        case 21: return Scene(BLUE_3, BLUE_3, 17950);  // around the world
+        case 22: return Scene(BLUE_3, YELLOW_3, 2733);  // transition
+        case 23: return Scene(YELLOW_3, RED_3, 1483);  // transition
+        case 24: return Scene(RED_3, RED_3, 17850);  // dragon
+        case 25: return Scene(RED_3, WHITE_3, 2916);  // transition
+        case 26: return Scene(WHITE_3, WHITE_3, 251016); 
     }
 }
 

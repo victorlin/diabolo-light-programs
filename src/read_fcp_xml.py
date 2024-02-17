@@ -6,6 +6,7 @@ Usage: read_fcp_xml.py <path/to/Info.fcpxml>
 
 import re
 import sys
+from textwrap import dedent
 import xml.etree.ElementTree as ET
 
 
@@ -22,6 +23,10 @@ def generate_scenes(fcp_xml):
 
     marker_pattern = re.compile(r'LED_MARKER ([A-Z]+_\d), ([A-Z]+_\d)( \/\/ .*)?')
 
+    scene_number = 1
+    scene_template = 'case {number}: return Scene({color1}, {color2}, {duration}); {comment}'
+    scene_lines = []
+
     for video in root.iter('video'):
         if video.attrib['name'].startswith('LED_MARKER'):
             match = marker_pattern.search(video.attrib['name'])
@@ -29,9 +34,37 @@ def generate_scenes(fcp_xml):
                 color1 = match.group(1)
                 color2 = match.group(2)
                 comment = match.group(3) or ''
-                print(f"Scene({color1}, {color2}, {duration_to_ms(video.attrib['duration'])}), // {comment}")
+                scene_lines.append(
+                    scene_template.format(
+                        number=scene_number,
+                        color1=color1,
+                        color2=color2,
+                        duration=duration_to_ms(video.attrib['duration']),
+                        comment=comment,
+                    )
+                )
             else:
-                print(f"Scene(, , {duration_to_ms(video.attrib['duration'])}),")
+                scene_lines.append(
+                    scene_template.format(
+                        number=scene_number,
+                        color1='',
+                        color2='',
+                        duration=duration_to_ms(video.attrib['duration']),
+                        comment='',
+                    )
+                )
+            scene_number += 1
+
+    print(dedent("""\
+        Scene get_current_scene(uint8_t scene_num) {{
+            switch (scene_num) {{
+                {case_statements}
+            }}
+        }}
+
+        const static uint8_t TOTAL_SCENES = {size};
+    """).format(case_statements='\n        '.join(scene_lines),
+                size=len(scene_lines)))
 
 
 def duration_to_ms(duration_str):
