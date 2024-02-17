@@ -28,7 +28,9 @@ def generate_scenes(fcp_xml):
     scene_lines = []
 
     for video in root.iter('video'):
-        if video.attrib['name'].startswith('LED_MARKER'):
+        disabled = ('enabled' in video.attrib) and (video.attrib['enabled'] == '0')
+
+        if video.attrib['name'].startswith('LED_MARKER') and not disabled:
             match = marker_pattern.search(video.attrib['name'])
             if match:
                 color1 = match.group(1)
