@@ -33,45 +33,48 @@ const static Color YELLOW_3  = Color(255, 128, 0  );
 const static Color ORANGE_3  = Color(255, 32, 0  );
 
 struct Scene {
-    const Color start;
-    const Color end;
+    const Color& start;
+    const Color& end;
     uint32_t duration;
     // TODO: add types of transitions. R/G/B balanced transition or R+G+B combined transition
 
-    Scene(const Color start, const Color end, double duration)
+    Scene(const Color& start, const Color& end, uint32_t duration)
         : start(start), end(end), duration(duration) {}
 };
 
-static Scene scenes[] = {
-Scene(WHITE_1, WHITE_1, 6683),
-Scene(WHITE_1, YELLOW_3, 1166),
-Scene(YELLOW_3, YELLOW_3, 36633),
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, ORANGE_3, 650), //  // umbrella
-Scene(ORANGE_3, ORANGE_3, 21200), //  // after umbrella
-Scene(ORANGE_3, BLUE_3, 2733), //  // transition
-Scene(BLUE_3, BLUE_3, 17950), //  // around the world
-Scene(BLUE_3, YELLOW_3, 2733), //  // transition
-Scene(YELLOW_3, RED_3, 1483), //  // transition
-Scene(RED_3, RED_3, 17850), //  // dragon
-Scene(RED_3, WHITE_3, 2916), //  // transition
-// Scene(WHITE_3, WHITE_3, 251016), // 
-};
+Scene get_current_scene(uint8_t scene_num) {
+    switch (scene_num) {
+        case 1: return Scene(WHITE_1, WHITE_1, 6683); 
+        case 2: return Scene(WHITE_1, YELLOW_3, 1166); 
+        case 3: return Scene(YELLOW_3, YELLOW_3, 36633);  // before umbrella
+        case 4: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 5: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 6: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 7: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 8: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 9: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 10: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 11: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 12: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 13: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 14: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 15: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 16: return Scene(RED_3, RED_3, 333);  // umbrella
+        case 17: return Scene(YELLOW_3, YELLOW_3, 316);  // umbrella
+        case 18: return Scene(RED_3, ORANGE_3, 650);  // umbrella
+        case 19: return Scene(ORANGE_3, ORANGE_3, 21200);  // after umbrella
+        case 20: return Scene(ORANGE_3, BLUE_3, 2733);  // transition
+        case 21: return Scene(BLUE_3, BLUE_3, 17950);  // around the world
+        case 22: return Scene(BLUE_3, YELLOW_3, 2733);  // transition
+        case 23: return Scene(YELLOW_3, RED_3, 1483);  // transition
+        case 24: return Scene(RED_3, RED_3, 17850);  // dragon
+        case 25: return Scene(RED_3, WHITE_3, 2916);  // transition
+        case 26: return Scene(WHITE_3, WHITE_3, 251016); 
+    }
+}
 
-uint8_t scene_num = 0;
+const static uint8_t TOTAL_SCENES = 26;
+uint8_t scene_num = 1;
 unsigned long past_scene_durations = 0;
 
 void set_all_pixels(uint32_t color) {
@@ -85,7 +88,7 @@ void setup() {
     pixels.begin();
 
     Diabolo_Light::begin(1, 0, [](){
-        scene_num = 0;
+        scene_num = 1;
         past_scene_durations = 0;
     });
 }
@@ -95,7 +98,7 @@ void loop() {
 
     if (Diabolo_Light::get_current_mode() != 1) return;
 
-    Scene scene = scenes[scene_num];
+    Scene scene = get_current_scene(scene_num);
 
     // Progress within current scene, from 0-1
     double progress =
@@ -108,17 +111,12 @@ void loop() {
         scene_num++;
 
         // Turn off after last scene
-        // if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        //     Diabolo_Light::set_current_mode(0);
-        // }
+        if (scene_num >= TOTAL_SCENES) {
+            Diabolo_Light::set_current_mode(0);
+        }
     }
 
-    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        // HACK
-        set_all_pixels(pixels.Color(255, 255, 255));
-        return;
-    }
-    else if (scene.start == scene.end) {
+    if (scene.start == scene.end) {
         set_all_pixels(pixels.Color(
             scene.start.r,
             scene.start.g,
