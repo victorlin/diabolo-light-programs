@@ -74,7 +74,7 @@ Scene get_current_scene(uint8_t scene_num) {
 }
 
 const static uint8_t TOTAL_SCENES = 26;
-uint8_t scene_num = 0;
+uint8_t scene_num = 1;
 unsigned long past_scene_durations = 0;
 
 void set_all_pixels(uint32_t color) {
@@ -88,7 +88,7 @@ void setup() {
     pixels.begin();
 
     Diabolo_Light::begin(1, 0, [](){
-        scene_num = 0;
+        scene_num = 1;
         past_scene_durations = 0;
     });
 }
