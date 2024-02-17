@@ -21,7 +21,7 @@ def generate_scenes(fcp_xml):
     with open(fcp_xml) as f:
         root = ET.fromstring(f.read())
 
-    marker_pattern = re.compile(r'LED_MARKER ([A-Z]+_\d), ([A-Z]+_\d)( \/\/ .*)?')
+    marker_pattern = re.compile(r'LED_MARKER ([A-Z_\d]+), ([A-Z_\d]+)( \/\/ .*)?')
 
     scene_number = 1
     scene_template = 'case {number}: return Scene({color1}, {color2}, {duration}); {comment}'
