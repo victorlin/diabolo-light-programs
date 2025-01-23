@@ -2,6 +2,8 @@
 
 A collection of programs using [ChaosNuggets/Diabolo_Light](https://github.com/ChaosNuggets/Diabolo_Light).
 
+Hardware: https://oshwlab.com/chaosnuggets/programmable-diabolo-lights
+
 ## Usage
 
 PlatformIO is configured to upload a `src/main.cpp` file. Choose which program to use by symlinking:
