@@ -24,7 +24,7 @@ struct Color {
     }
 };
 
-const static Color WHITE_1   = Color(20, 20, 20 );
+const static Color WHITE_1   = Color(125, 125, 125);
 const static Color WHITE_3   = Color(255, 255, 255);
 const static Color RED_3     = Color(255, 0, 0  );
 const static Color GREEN_3   = Color(128, 255, 0  );
@@ -43,32 +43,17 @@ struct Scene {
 };
 
 static Scene scenes[] = {
-Scene(WHITE_1, WHITE_1, 6683),
-Scene(WHITE_1, YELLOW_3, 1166),
-Scene(YELLOW_3, YELLOW_3, 36633),
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, ORANGE_3, 650), //  // umbrella
-Scene(ORANGE_3, ORANGE_3, 21200), //  // after umbrella
-Scene(ORANGE_3, BLUE_3, 2733), //  // transition
-Scene(BLUE_3, BLUE_3, 17950), //  // around the world
-Scene(BLUE_3, YELLOW_3, 2733), //  // transition
-Scene(YELLOW_3, RED_3, 1483), //  // transition
-Scene(RED_3, RED_3, 17850), //  // dragon
-Scene(RED_3, WHITE_3, 2916), //  // transition
-// Scene(WHITE_3, WHITE_3, 251016), // 
+Scene(WHITE_1, WHITE_1, 1900), //  // start
+Scene(WHITE_1, YELLOW_3, 1450), //  // spin
+Scene(YELLOW_3, WHITE_1, 1316), //  // spin
+Scene(WHITE_1, WHITE_1, 14116), // 
+Scene(WHITE_1, ORANGE_3, 616), //  // toss
+Scene(ORANGE_3, WHITE_1, 616), //  // toss
+Scene(WHITE_1, WHITE_1, 27766), // 
+Scene(WHITE_1, YELLOW_3, 1666), //  // transition
+Scene(YELLOW_3, YELLOW_3, 12266), //  // stick release
+Scene(YELLOW_3, WHITE_3, 1666), //  // transition
+Scene(WHITE_3, WHITE_3, 251016), // 
 };
 
 uint8_t scene_num = 0;
