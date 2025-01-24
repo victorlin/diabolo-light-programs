@@ -20,7 +20,7 @@ def generate_scenes(fcp_xml):
     with open(fcp_xml) as f:
         root = ET.fromstring(f.read())
 
-        marker_pattern = re.compile(r'LED_MARKER ([A-Z]+_\d), ([A-Z]+_\d)( \/\/ .*)?')
+        marker_pattern = re.compile(r'LED_MARKER ([A-Z_0-9]+), ([A-Z_0-9]+)( \/\/ .*)?')
 
         for video in root.iter('video'):
             if video.attrib['name'].startswith('LED_MARKER'):
@@ -35,8 +35,11 @@ def generate_scenes(fcp_xml):
 
 
 def duration_to_ms(duration_str):
-    numerator, denominator = duration_str.replace("s","").split("/")
-    return int(int(numerator) / int(denominator) * 1000)
+    if "/" in duration_str:
+        numerator, denominator = duration_str.replace("s","").split("/")
+        return int(int(numerator) / int(denominator) * 1000)
+    else:
+        return int(duration_str.replace("s","")) * 1000
 
 
 main()

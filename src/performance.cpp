@@ -31,6 +31,7 @@ const static Color GREEN_3   = Color(128, 255, 0  );
 const static Color BLUE_3    = Color(0, 0, 255);
 const static Color YELLOW_3  = Color(255, 128, 0  );
 const static Color ORANGE_3  = Color(255, 32, 0  );
+const static Color OFF       = Color(0, 0, 0);
 
 struct Scene {
     const Color start;
@@ -53,7 +54,9 @@ Scene(WHITE_1, WHITE_1, 27766), //
 Scene(WHITE_1, YELLOW_3, 1666), //  // transition
 Scene(YELLOW_3, YELLOW_3, 12266), //  // stick release
 Scene(YELLOW_3, WHITE_3, 1666), //  // transition
-Scene(WHITE_3, WHITE_3, 251016), // 
+Scene(WHITE_3, WHITE_3, 79283), // 
+Scene(WHITE_3, OFF, 1300), //  // transition
+Scene(OFF, OFF, 250), // 
 };
 
 uint8_t scene_num = 0;
@@ -93,17 +96,12 @@ void loop() {
         scene_num++;
 
         // Turn off after last scene
-        // if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        //     Diabolo_Light::set_current_mode(0);
-        // }
+        if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
+            Diabolo_Light::set_current_mode(0);
+        }
     }
 
-    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        // HACK
-        set_all_pixels(pixels.Color(255, 255, 255));
-        return;
-    }
-    else if (scene.start == scene.end) {
+    if (scene.start == scene.end) {
         set_all_pixels(pixels.Color(
             scene.start.r,
             scene.start.g,
