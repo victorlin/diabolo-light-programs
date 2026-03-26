@@ -25,12 +25,14 @@ struct Color {
 };
 
 const static Color WHITE_1   = Color(20, 20, 20 );
+const static Color WHITE_2   = Color(64, 64, 64 );
 const static Color WHITE_3   = Color(255, 255, 255);
-const static Color RED_3     = Color(255, 0, 0  );
-const static Color GREEN_3   = Color(128, 255, 0  );
+const static Color BLUE_1    = Color(0, 0, 20);
+const static Color BLUE_2    = Color(0, 0, 64);
 const static Color BLUE_3    = Color(0, 0, 255);
-const static Color YELLOW_3  = Color(255, 128, 0  );
+const static Color RED_3     = Color(255, 0, 0  );
 const static Color ORANGE_3  = Color(255, 32, 0  );
+const static Color OFF       = Color(0, 0, 0  );
 
 struct Scene {
     const Color start;
@@ -42,34 +44,46 @@ struct Scene {
         : start(start), end(end), duration(duration) {}
 };
 
-static Scene scenes[] = {
-Scene(WHITE_1, WHITE_1, 6683),
-Scene(WHITE_1, YELLOW_3, 1166),
-Scene(YELLOW_3, YELLOW_3, 36633),
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, RED_3, 333), //  // umbrella
-Scene(YELLOW_3, YELLOW_3, 316), //  // umbrella
-Scene(RED_3, ORANGE_3, 650), //  // umbrella
-Scene(ORANGE_3, ORANGE_3, 21200), //  // after umbrella
-Scene(ORANGE_3, BLUE_3, 2733), //  // transition
-Scene(BLUE_3, BLUE_3, 17950), //  // around the world
-Scene(BLUE_3, YELLOW_3, 2733), //  // transition
-Scene(YELLOW_3, RED_3, 1483), //  // transition
-Scene(RED_3, RED_3, 17850), //  // dragon
-Scene(RED_3, WHITE_3, 2916), //  // transition
-// Scene(WHITE_3, WHITE_3, 251016), // 
-};
+const uint32_t STROBE_TOTAL_DURATION = 2235;
+const uint32_t STROBE_PULSE_DURATION = 50;
+const uint8_t STROBE_COUNT = STROBE_TOTAL_DURATION / STROBE_PULSE_DURATION;
+
+
+Scene get_scene(uint8_t index) {
+    uint8_t i = 0;
+
+    if (index == i++) return Scene(WHITE_1, WHITE_1, 7991);
+    
+    // Strobe sequence
+    if (index >= i && index < i + STROBE_COUNT) {
+        // uncomment to debug other scenes
+        // return Scene(WHITE_1, WHITE_1, 10);
+
+        uint8_t strobe_idx = index - i;
+        double progress = static_cast<double>(strobe_idx) / (STROBE_COUNT - 1);
+        bool is_white = strobe_idx % 2;
+        
+        if (is_white) {
+            DiodeBrightness c_val = 20 + static_cast<DiodeBrightness>((255 - 20) * progress);
+            Color c(c_val, c_val, c_val);
+            return Scene(c, c, STROBE_PULSE_DURATION);
+        } else {
+            DiodeBrightness b_val = 20 + static_cast<DiodeBrightness>((255 - 20) * progress);
+            Color c(0, 0, b_val);
+            return Scene(c, c, STROBE_PULSE_DURATION);
+        }
+    }
+    i += STROBE_COUNT;
+    
+    if (index == i++) return Scene(WHITE_3, WHITE_3, 1634);
+    if (index == i++) return Scene(WHITE_3, OFF, 1634);
+    if (index == i++) return Scene(OFF, OFF, 14413);
+    if (index == i++) return Scene(OFF, ORANGE_3, 817);
+    if (index == i++) return Scene(ORANGE_3, RED_3, 817);
+    if (index == i++) return Scene(RED_3, RED_3, 1000);
+    
+    return Scene(OFF, OFF, 0); // End of animation
+}
 
 uint8_t scene_num = 0;
 unsigned long past_scene_durations = 0;
@@ -84,7 +98,7 @@ void set_all_pixels(uint32_t color) {
 void setup() {
     pixels.begin();
 
-    Diabolo_Light::begin(1, 0, [](){
+    Diabolo_Light::begin(2, 0, [](){
         scene_num = 0;
         past_scene_durations = 0;
     });
@@ -93,33 +107,36 @@ void setup() {
 void loop() {
     Diabolo_Light::handle_button();
 
-    if (Diabolo_Light::get_current_mode() != 1) return;
+    if (Diabolo_Light::get_current_mode() > 2) return;
 
-    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        // should be unreachable?
-        set_all_pixels(pixels.Color(255, 255, 255));
+    // 2nd press - straight to red
+    if (Diabolo_Light::get_current_mode() == 2) {
+        set_all_pixels(pixels.Color(255, 0, 0));
         return;
     }
-
-    Scene scene = scenes[scene_num];
 
     // Progress within current scene, from 0-1
     double progress =
         static_cast<double>(Diabolo_Light::awake_time() - past_scene_durations)
-        / scene.duration;
+        / get_scene(scene_num).duration;
 
     // Go to next scene
     if (progress >= 1) {
-        past_scene_durations = past_scene_durations + scene.duration;
-        scene_num++;
+        if (get_scene(scene_num + 1).duration > 0) {
+            past_scene_durations = past_scene_durations + get_scene(scene_num).duration;
+            scene_num++;
+            // recalculate progress for the new scene
+            progress = static_cast<double>(Diabolo_Light::awake_time() - past_scene_durations)
+                       / get_scene(scene_num).duration;
+        } else {
+            // Last scene reached, hold indefinitely
+            progress = 1.0;
+        }
     }
 
-    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        // should be unreachable?
-        set_all_pixels(pixels.Color(255, 255, 255));
-        return;
-    }
-    else if (scene.start == scene.end) {
+    const Scene scene = get_scene(scene_num);
+
+    if (scene.start == scene.end) {
         set_all_pixels(pixels.Color(
             scene.start.r,
             scene.start.g,
