@@ -95,6 +95,12 @@ void loop() {
 
     if (Diabolo_Light::get_current_mode() != 1) return;
 
+    if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
+        // should be unreachable?
+        set_all_pixels(pixels.Color(255, 255, 255));
+        return;
+    }
+
     Scene scene = scenes[scene_num];
 
     // Progress within current scene, from 0-1
@@ -106,15 +112,10 @@ void loop() {
     if (progress >= 1) {
         past_scene_durations = past_scene_durations + scene.duration;
         scene_num++;
-
-        // Turn off after last scene
-        // if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        //     Diabolo_Light::set_current_mode(0);
-        // }
     }
 
     if (scene_num >= sizeof(scenes) / sizeof(scenes[0])) {
-        // HACK
+        // should be unreachable?
         set_all_pixels(pixels.Color(255, 255, 255));
         return;
     }
