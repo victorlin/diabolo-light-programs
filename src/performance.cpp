@@ -37,7 +37,6 @@ const static Color OFF       = Color(0, 0, 0  );
 uint8_t segment_num = 0;
 unsigned long past_segment_durations = 0;
 uint32_t prev_color = UINT32_MAX; // "null"
-unsigned int prev_mode = 0;
 
 void on_wake_up() {
     segment_num = 0;
@@ -46,10 +45,12 @@ void on_wake_up() {
 }
 
 void set_all_pixels(uint32_t color) {
+    if (color == prev_color) return;
     for (unsigned int i = 0; i < Diabolo_Light::NUM_LEDS; i++) {
         pixels.setPixelColor(i, color);
     }
     pixels.show();
+    prev_color = color;
 }
 
 
@@ -108,7 +109,7 @@ Segment get_chidori_segment(uint8_t index) {
     @brief   Advances the animation based on elapsed time and updates the LEDs.
              Segments are played in sequence; each segment interpolates between
              a start and end color over its duration. Has side effects:
-             mutates segment_num, past_segment_durations, and prev_color.
+             mutates segment_num, past_segment_durations.
 */
 void chidori() {
     const Segment segment = get_chidori_segment(segment_num);
@@ -150,10 +151,7 @@ void chidori() {
             render_segment.start.b + static_cast<DiodeBrightnessOffset>((render_segment.end.b - render_segment.start.b) * progress)
         );
     }
-    if (color != prev_color) {
-        set_all_pixels(color);
-        prev_color = color;
-    }
+    set_all_pixels(color);
 }
 
 void setup() {
@@ -170,8 +168,6 @@ void loop() {
         chidori();
     }
     if (mode == 2) {
-        if (prev_mode == 2) return;
         set_all_pixels(pixels.Color(255, 0, 0));
     }
-    prev_mode = mode;
 }

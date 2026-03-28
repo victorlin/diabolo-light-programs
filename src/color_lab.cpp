@@ -10,6 +10,12 @@ Adafruit_NeoPixel pixels(
 
 typedef uint32_t Color;
 
+Color prev_color = UINT32_MAX; // "null"
+
+void on_wake_up() {
+    prev_color = UINT32_MAX;
+}
+
 static Color colors[] = {
     pixels.Color(255, 0  , 0  ), // red
     pixels.Color(255, 64 , 0  ), // orange
@@ -38,29 +44,25 @@ static Color colors[] = {
 };
 
 void show_color(Color color) {
+    if (color == prev_color) return;
     for (unsigned int i = 0; i < Diabolo_Light::NUM_LEDS; i++) {
         pixels.setPixelColor(i, color);
     }
     pixels.show();
+    prev_color = color;
 }
 
 void setup() {
     pixels.begin();
     unsigned int num_colors = sizeof(colors) / sizeof(colors[0]);
-    Diabolo_Light::begin(num_colors, 0);
+    Diabolo_Light::begin(num_colors, 0, on_wake_up);
 }
-
-unsigned int prev_mode = 0;
 
 void loop() {
     Diabolo_Light::handle_button();
     unsigned int mode = Diabolo_Light::get_current_mode();
 
-    if (mode == prev_mode) return;
-
     if (mode > 0) {
         show_color(colors[mode - 1]);
     }
-
-    prev_mode = mode;
 }

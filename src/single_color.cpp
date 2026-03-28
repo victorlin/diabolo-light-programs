@@ -8,29 +8,32 @@ Adafruit_NeoPixel pixels(
     Diabolo_Light::LED_TYPE
 );
 
+uint32_t prev_color = UINT32_MAX; // "null"
+
+void on_wake_up() {
+    prev_color = UINT32_MAX;
+}
+
 void set_all_pixels(uint32_t color) {
+    if (color == prev_color) return;
     for (unsigned int i = 0; i < Diabolo_Light::NUM_LEDS; i++) {
         pixels.setPixelColor(i, color);
     }
     pixels.show();
+    prev_color = color;
 }
+
 
 void setup() {
     pixels.begin();
-    Diabolo_Light::begin(1, 0);
+    Diabolo_Light::begin(1, 0, on_wake_up);
 }
-
-unsigned int prev_mode = 0;
 
 void loop() {
     Diabolo_Light::handle_button();
     unsigned int mode = Diabolo_Light::get_current_mode();
 
-    if (mode == prev_mode) return;
-
     if (mode == 1) {
         set_all_pixels(pixels.Color(255, 0, 0));
     }
-
-    prev_mode = mode;
 }
