@@ -20,8 +20,17 @@ void setup() {
     Diabolo_Light::begin(1, 0);
 }
 
+unsigned int prev_mode = 0;
+
 void loop() {
     Diabolo_Light::handle_button();
-    if (Diabolo_Light::get_current_mode() != 1) return;
-    set_all_pixels(pixels.Color(255, 255, 255));
+    unsigned int mode = Diabolo_Light::get_current_mode();
+
+    if (mode == prev_mode) return;
+
+    if (mode == 1) {
+        set_all_pixels(pixels.Color(255, 0, 0));
+    }
+
+    prev_mode = mode;
 }

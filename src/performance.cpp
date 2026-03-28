@@ -87,6 +87,7 @@ Scene get_scene(uint8_t index) {
 
 uint8_t scene_num = 0;
 unsigned long past_scene_durations = 0;
+unsigned int prev_mode = 0;
 
 void set_all_pixels(uint32_t color) {
     for (unsigned int i = 0; i < Diabolo_Light::NUM_LEDS; i++) {
@@ -107,47 +108,56 @@ void setup() {
 void loop() {
     Diabolo_Light::handle_button();
 
-    if (Diabolo_Light::get_current_mode() > 2) return;
+    unsigned int mode = Diabolo_Light::get_current_mode();
+
+    if (mode > 2) return;
 
     // 2nd press - straight to red
-    if (Diabolo_Light::get_current_mode() == 2) {
-        set_all_pixels(pixels.Color(255, 0, 0));
+    if (mode == 2) {
+        if (mode != prev_mode) {
+            set_all_pixels(pixels.Color(255, 0, 0));
+            prev_mode = mode;
+        }
         return;
     }
+    prev_mode = mode;
+
+    const Scene scene = get_scene(scene_num);
 
     // Progress within current scene, from 0-1
     double progress =
         static_cast<double>(Diabolo_Light::awake_time() - past_scene_durations)
-        / get_scene(scene_num).duration;
+        / scene.duration;
 
     // Go to next scene
     if (progress >= 1) {
-        if (get_scene(scene_num + 1).duration > 0) {
-            past_scene_durations = past_scene_durations + get_scene(scene_num).duration;
+        const Scene next_scene = get_scene(scene_num + 1);
+        if (next_scene.duration > 0) {
+            past_scene_durations = past_scene_durations + scene.duration;
             scene_num++;
             // recalculate progress for the new scene
             progress = static_cast<double>(Diabolo_Light::awake_time() - past_scene_durations)
-                       / get_scene(scene_num).duration;
+                       / next_scene.duration;
         } else {
             // Last scene reached, hold indefinitely
             progress = 1.0;
         }
     }
 
-    const Scene scene = get_scene(scene_num);
+    const Scene render_scene = get_scene(scene_num);
 
-    if (scene.start == scene.end) {
+    if (render_scene.start == render_scene.end) {
         set_all_pixels(pixels.Color(
-            scene.start.r,
-            scene.start.g,
-            scene.start.b
+            render_scene.start.r,
+            render_scene.start.g,
+            render_scene.start.b
         ));
     }
     else {
         set_all_pixels(pixels.Color(
-            scene.start.r + static_cast<DiodeBrightnessOffset>((scene.end.r - scene.start.r) * progress),
-            scene.start.g + static_cast<DiodeBrightnessOffset>((scene.end.g - scene.start.g) * progress),
-            scene.start.b + static_cast<DiodeBrightnessOffset>((scene.end.b - scene.start.b) * progress)
+            render_scene.start.r + static_cast<DiodeBrightnessOffset>((render_scene.end.r - render_scene.start.r) * progress),
+            render_scene.start.g + static_cast<DiodeBrightnessOffset>((render_scene.end.g - render_scene.start.g) * progress),
+            render_scene.start.b + static_cast<DiodeBrightnessOffset>((render_scene.end.b - render_scene.start.b) * progress)
         ));
     }
 }
