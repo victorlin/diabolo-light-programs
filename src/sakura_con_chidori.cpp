@@ -94,12 +94,10 @@ Segment get_chidori_segment(uint8_t index) {
     }
     i += STROBE_COUNT;
 
-    if (index == i++) return Segment(WHITE_3, WHITE_3, 1634);
-    if (index == i++) return Segment(WHITE_3, OFF, 1634);
-    if (index == i++) return Segment(OFF, OFF, 14413);
-    if (index == i++) return Segment(OFF, ORANGE_3, 817);
-    if (index == i++) return Segment(ORANGE_3, RED_3, 817);
-    if (index == i++) return Segment(RED_3, RED_3, 1000);
+    if (index == i++) return Segment(WHITE_3, WHITE_3, 13797);
+    if (index == i++) return Segment(RED_3, RED_3, 107974);
+    if (index == i++) return Segment(RED_3, ORANGE_3, 1143);
+    if (index == i++) return Segment(ORANGE_3, OFF, 1143);
 
     return Segment(OFF, OFF, 0); // End of animation
 }
@@ -129,7 +127,12 @@ void chidori() {
             progress = static_cast<double>(Diabolo_Light::awake_time() - past_segment_durations)
                        / next_segment.duration;
         } else {
-            // Last segment reached, hold indefinitely
+            // Last segment reached
+            if (segment.end == OFF) {
+                Diabolo_Light::set_current_mode(0);
+                return;
+            }
+            // Hold indefinitely
             progress = 1.0;
         }
     }
