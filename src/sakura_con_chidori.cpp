@@ -32,6 +32,7 @@ const static Color BLUE_2    = Color(0, 0, 64);
 const static Color BLUE_3    = Color(0, 0, 255);
 const static Color RED_3     = Color(255, 0, 0  );
 const static Color ORANGE_3  = Color(255, 32, 0  );
+const static Color YELLOW_3  = Color(255, 128, 0  );
 const static Color OFF       = Color(0, 0, 0  );
 
 uint8_t segment_num = 0;
@@ -95,9 +96,10 @@ Segment get_chidori_segment(uint8_t index) {
     i += STROBE_COUNT;
 
     if (index == i++) return Segment(WHITE_3, WHITE_3, 13797);
-    if (index == i++) return Segment(RED_3, RED_3, 107974);
-    if (index == i++) return Segment(RED_3, ORANGE_3, 1143);
-    if (index == i++) return Segment(ORANGE_3, OFF, 1143);
+    if (index == i++) return Segment(RED_3, RED_3, 4404);
+    if (index == i++) return Segment(RED_3, RED_3, 103570);
+    if (index == i++) return Segment(RED_3, YELLOW_3, 2286);
+    if (index == i++) return Segment(YELLOW_3, YELLOW_3, 1000);
 
     return Segment(OFF, OFF, 0); // End of animation
 }

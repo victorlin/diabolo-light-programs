@@ -32,6 +32,7 @@ const static Color BLUE_2    = Color(0, 0, 64);
 const static Color BLUE_3    = Color(0, 0, 255);
 const static Color RED_3     = Color(255, 0, 0  );
 const static Color ORANGE_3  = Color(255, 32, 0  );
+const static Color YELLOW_3  = Color(255, 128, 0  );
 const static Color OFF       = Color(0, 0, 0  );
 
 uint8_t segment_num = 0;
@@ -68,38 +69,15 @@ const uint32_t STROBE_TOTAL_DURATION = 2235;
 const uint32_t STROBE_PULSE_DURATION = 50;
 const uint8_t STROBE_COUNT = STROBE_TOTAL_DURATION / STROBE_PULSE_DURATION;
 
-Segment get_chidori_segment(uint8_t index) {
+Segment get_segment(uint8_t index) {
     uint8_t i = 0;
 
-    if (index == i++) return Segment(WHITE_1, WHITE_1, 7991);
+    // if (index == i++) return Segment(RED_3, RED_3, 4404);
+    if (index == i++) return Segment(RED_3, RED_3, 103570);
+    if (index == i++) return Segment(RED_3, YELLOW_3, 2286);
+    if (index == i++) return Segment(YELLOW_3, YELLOW_3, 1000);
 
-    // Strobe sequence
-    if (index >= i && index < i + STROBE_COUNT) {
-        // uncomment to debug other segments
-        // return Segment(WHITE_1, WHITE_1, 10);
-
-        uint8_t strobe_idx = index - i;
-        double progress = static_cast<double>(strobe_idx) / (STROBE_COUNT - 1);
-        bool is_white = strobe_idx % 2;
-
-        if (is_white) {
-            DiodeBrightness c_val = 20 + static_cast<DiodeBrightness>((255 - 20) * progress);
-            Color c(c_val, c_val, c_val);
-            return Segment(c, c, STROBE_PULSE_DURATION);
-        } else {
-            DiodeBrightness b_val = 20 + static_cast<DiodeBrightness>((255 - 20) * progress);
-            Color c(0, 0, b_val);
-            return Segment(c, c, STROBE_PULSE_DURATION);
-        }
-    }
-    i += STROBE_COUNT;
-
-    if (index == i++) return Segment(WHITE_3, WHITE_3, 13797);
-    if (index == i++) return Segment(RED_3, RED_3, 107974);
-    if (index == i++) return Segment(RED_3, ORANGE_3, 1143);
-    if (index == i++) return Segment(ORANGE_3, OFF, 1143);
-
-    return Segment(OFF, OFF, 0); // End of animation
+    return Segment(OFF, OFF, 0); // End of animation - hold the last one
 }
 
 
@@ -109,8 +87,8 @@ Segment get_chidori_segment(uint8_t index) {
              a start and end color over its duration. Has side effects:
              mutates segment_num, past_segment_durations.
 */
-void chidori() {
-    const Segment segment = get_chidori_segment(segment_num);
+void run_segments() {
+    const Segment segment = get_segment(segment_num);
 
     // Progress within current segment, from 0-1
     double progress =
@@ -119,7 +97,7 @@ void chidori() {
 
     // Go to next segment
     if (progress >= 1) {
-        const Segment next_segment = get_chidori_segment(segment_num + 1);
+        const Segment next_segment = get_segment(segment_num + 1);
         if (next_segment.duration > 0) {
             past_segment_durations = past_segment_durations + segment.duration;
             segment_num++;
@@ -137,7 +115,7 @@ void chidori() {
         }
     }
 
-    const Segment render_segment = get_chidori_segment(segment_num);
+    const Segment render_segment = get_segment(segment_num);
 
     uint32_t color;
     if (render_segment.start == render_segment.end) {
@@ -168,7 +146,7 @@ void loop() {
     unsigned int mode = Diabolo_Light::get_current_mode();
 
     if (mode == 1) {
-        chidori();
+        run_segments();
     }
     if (mode == 2) {
         set_all_pixels(pixels.Color(255, 0, 0));
