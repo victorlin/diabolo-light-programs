@@ -18,6 +18,7 @@ void on_wake_up() {
 
 static Color colors[] = {
     pixels.Color(255, 0  , 0  ), // red
+    pixels.Color(255, 32 , 0  ), // orange
     pixels.Color(255, 64 , 0  ), // orange
     pixels.Color(255, 128, 0  ), // warm yellow
     pixels.Color(255, 192, 0  ), // yellow-green
