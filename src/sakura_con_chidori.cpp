@@ -72,7 +72,7 @@ const uint8_t STROBE_COUNT = STROBE_TOTAL_DURATION / STROBE_PULSE_DURATION;
 Segment get_chidori_segment(uint8_t index) {
     uint8_t i = 0;
 
-    if (index == i++) return Segment(WHITE_1, WHITE_1, 7991);
+    if (index == i++) return Segment(WHITE_1, WHITE_1, 224207);
 
     // Strobe sequence
     if (index >= i && index < i + STROBE_COUNT) {
